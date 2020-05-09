@@ -26,7 +26,7 @@ pipeline {
     stage('Docker Build') {
       agent any
       steps {
-        sh 'docker build -t srujanswaroop/javacalc:latest .'
+        sh 'sudo docker build -t srujanswaroop/javacalc:latest .'
       }
     }
     stage('Docker Push') {
