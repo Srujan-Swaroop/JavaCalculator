@@ -23,20 +23,24 @@ pipeline {
         sh 'mvn test'
       }
     }
-    stage('Docker Build') {
-      agent any
-      steps {
-        sh 'sudo docker build -t srujanswaroop/javacalc:latest .'
-      }
-    }
-    stage('Docker Push') {
-      agent any
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-          sh 'docker push srujanswaroop/javacalc:latest'
+    stage('DockerHub') {
+      stages{
+        stage('Build Image') {
+          steps{
+            script {
+              dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            }
+          }
         }
-      }
     }
+        stage('Push Image') {
+          steps{
+            script {
+              docker.withRegistry( '', registryCredential ) {
+                dockerImage.push()
+              }
+            }
+          }
+        }
   }
 }
