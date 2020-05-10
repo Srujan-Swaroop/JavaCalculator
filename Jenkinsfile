@@ -56,12 +56,6 @@ pipeline {
       }
     }
 
-    stage('test') {
-      steps {
-        sh 'mvn test'
-      }
-    }
-
   }
   environment {
     registry = 'srujanswaroop/javacalc'
